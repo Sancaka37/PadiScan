@@ -1,36 +1,34 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'home_page.dart';
-import 'register_page.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
   // Variabel untuk melacak peran yang dipilih (default: false = Petani)
   bool isPetugas = false; 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true, 
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context), 
+          onPressed: () => Navigator.pop(context),
         ),
       ),
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // 1. Latar Belakang Fotografi
+          // 1. Latar Belakang (Sama dengan Halaman Login)
           Image.network(
             'https://images.unsplash.com/photo-1590682680695-43b964a3ae17?q=80&w=1000&auto=format&fit=crop',
             fit: BoxFit.cover,
@@ -43,15 +41,12 @@ class _LoginPageState extends State<LoginPage> {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [
-                  Colors.black.withOpacity(0.4),
-                  Colors.black.withOpacity(0.8),
-                ],
+                colors: [Colors.black.withOpacity(0.5), Colors.black.withOpacity(0.9)],
               ),
             ),
           ),
 
-          // 3. Form Login dengan Efek Kaca (Glassmorphism)
+          // 3. Form Pendaftaran Glassmorphism
           Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -62,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Container(
                     padding: const EdgeInsets.all(32.0),
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.3),
+                      color: Colors.black.withOpacity(0.4),
                       borderRadius: BorderRadius.circular(24.0),
                       border: Border.all(color: Colors.white.withOpacity(0.2)),
                     ),
@@ -71,21 +66,13 @@ class _LoginPageState extends State<LoginPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Masuk',
-                          style: GoogleFonts.quicksand(
-                            fontSize: 36,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
+                          'Daftar Akun',
+                          style: GoogleFonts.quicksand(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white),
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Selamat datang kembali di PadiScan.',
-                          style: GoogleFonts.montserrat(
-                            fontSize: 14,
-                            color: Colors.white70,
-                            height: 1.5,
-                          ),
+                          'Pilih peran Anda untuk menyesuaikan pengalaman menggunakan PadiScan.',
+                          style: GoogleFonts.montserrat(fontSize: 13, color: Colors.white70, height: 1.5),
                         ),
                         const SizedBox(height: 24),
 
@@ -126,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(vertical: 12),
                                     decoration: BoxDecoration(
-                                      color: isPetugas ? const Color(0xFF1E3A8A) : Colors.transparent, // Warna biru khas dinas
+                                      color: isPetugas ? const Color(0xFF1E3A8A) : Colors.transparent, // Biru elegan untuk Petugas
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Center(
@@ -145,89 +132,37 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                         ),
                         const SizedBox(height: 24),
+
+                        // --- INPUT FORM ---
+                        _buildTextField(hint: 'Nama Lengkap', icon: Icons.person),
+                        const SizedBox(height: 16),
+                        _buildTextField(hint: 'Nomor WhatsApp', icon: Icons.phone, isNumber: true),
                         
-                        // --- INPUT TEXT FIELD (Dinamis) ---
-                        TextField(
-                          keyboardType: TextInputType.number,
-                          style: const TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: Colors.white.withOpacity(0.1),
-                            // Teks dan Ikon berubah tergantung siapa yang login
-                            hintText: isPetugas ? 'Masukkan NIP Anda' : 'Contoh: 08123456789',
-                            hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
-                            prefixIcon: Icon(
-                              isPetugas ? Icons.badge : Icons.phone, 
-                              color: Colors.white70
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16.0),
-                              borderSide: BorderSide.none,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16.0),
-                              borderSide: BorderSide(
-                                color: isPetugas ? const Color(0xFF1E3A8A) : const Color(0xFF2ECC71), 
-                                width: 1.5
-                              ),
-                            ),
-                          ),
-                        ),
+                        // Memunculkan kolom NIP secara dinamis jika "Petugas" dipilih
+                        if (isPetugas) ...[
+                          const SizedBox(height: 16),
+                          _buildTextField(hint: 'Nomor Pegawai (NIP)', icon: Icons.badge, isNumber: true),
+                        ],
                         const SizedBox(height: 32),
                         
-                        // --- TOMBOL MASUK ---
+                        // --- TOMBOL DAFTAR ---
                         SizedBox(
                           width: double.infinity,
                           height: 56,
                           child: ElevatedButton(
                             onPressed: () {
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(builder: (context) => HomePage(isPetugas: isPetugas)),
-                                (route) => false,
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Mendaftar sebagai ${isPetugas ? "Petugas POPT" : "Petani"}...')),
                               );
+                              Navigator.pop(context); // Kembali ke halaman login setelah daftar
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: isPetugas ? const Color(0xFF1E3A8A) : const Color(0xFF2ECC71),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                              ),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
                             ),
                             child: Text(
-                              'Masuk',
-                              style: GoogleFonts.montserrat(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-
-                        // --- LINK KE HALAMAN DAFTAR ---
-                        Center(
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context, 
-                                MaterialPageRoute(builder: (context) => const RegisterPage())
-                              );
-                            },
-                            child: RichText(
-                              text: TextSpan(
-                                style: GoogleFonts.montserrat(color: Colors.white70, fontSize: 13),
-                                children: [
-                                  const TextSpan(text: 'Belum punya akun? '),
-                                  TextSpan(
-                                    text: 'Daftar di sini',
-                                    style: GoogleFonts.montserrat(
-                                      color: isPetugas ? const Color(0xFF60A5FA) : const Color(0xFF2ECC71), 
-                                      fontWeight: FontWeight.bold
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              'Daftar Sekarang',
+                              style: GoogleFonts.montserrat(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
                             ),
                           ),
                         ),
@@ -239,6 +174,22 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  // Widget Pembantu untuk Form Input
+  Widget _buildTextField({required String hint, required IconData icon, bool isNumber = false}) {
+    return TextField(
+      keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+      style: const TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.white.withOpacity(0.1),
+        hintText: hint,
+        hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)),
+        prefixIcon: Icon(icon, color: Colors.white70),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16.0), borderSide: BorderSide.none),
       ),
     );
   }
