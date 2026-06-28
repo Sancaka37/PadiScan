@@ -30,7 +30,7 @@ class _RegisterPageState extends State<RegisterPage> {
         children: [
           // 1. Latar Belakang (Sama dengan Halaman Login)
           Image.network(
-            'https://images.unsplash.com/photo-1590682680695-43b964a3ae17?q=80&w=1000&auto=format&fit=crop',
+            'https://images.unsplash.com/photo-1701665836468-4346c4d0d574?q=80&w=776&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
             fit: BoxFit.cover,
             errorBuilder: (context, error, stackTrace) => Container(color: Colors.grey[800]),
           ),
